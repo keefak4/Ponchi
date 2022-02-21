@@ -11,5 +11,11 @@ public class EnemyParasit : BasicUnity
         {
             ReciewDamage();
         }
+        BasicUnity basicUnity = other.GetComponent<BasicUnity>();
+        if (basicUnity && basicUnity is Controler)
+        {
+            basicUnity.ReciewDamage();
+        }
     }
+
 }

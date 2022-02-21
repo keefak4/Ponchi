@@ -10,8 +10,12 @@ public class Controler : BasicUnity
     [SerializeField] private float speedNormal;
     [SerializeField] private int health;
     [SerializeField] private Joystick joystick;
+    [SerializeField] private GameObject protectiveCircle;
+    [SerializeField] private GameObject positionPlayerDead;
+    [SerializeField] private GameObject effectOfImortalTransformPosition;
     //Используемые переменные внутри кода
     private Vector3 moveComponent;
+    private bool isEffectImortal;
     
     private void Start()
     {
@@ -21,10 +25,7 @@ public class Controler : BasicUnity
     {
         LogicMove();
     }
-    private void FixedUpdate()
-    {
-        
-    }
+    
     private void LogicMove()
     {
         float movementX = joystick.Horizontal;
@@ -34,8 +35,22 @@ public class Controler : BasicUnity
     }
     public override void ReciewDamage()
     {
-        health--;
-        Debug.Log(health);
+        StartCoroutine(Dead());
     }
+    private IEnumerator Dead()
+    {
+        health--;
+        yield return new WaitForSeconds(0.1f);
+        protectiveCircle.SetActive(true);
+        isEffectImortal = true;
+        transform.position = positionPlayerDead.transform.position;
+        yield return new WaitForSeconds(0.2f);
+        transform.position = new Vector3(transform.position.x, transform.position.y, effectOfImortalTransformPosition.transform.position.z);
+        yield return new WaitForSeconds(2f);
+        protectiveCircle.SetActive(false);
+        isEffectImortal = false;
+        transform.position = new Vector3(transform.position.x,transform.position.y,0);
+    }
+    
 
 }
